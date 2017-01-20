@@ -1,5 +1,6 @@
 # godot-mysql-module
 MySQL Connector Module for Godot Engine
+
 Requirements:
   C++ MySQL Connector Library, which can be installed on Unix/Linux Systems with: apt-get install libmysqlcppconn-dev
 
