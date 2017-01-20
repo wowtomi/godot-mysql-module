@@ -38,7 +38,7 @@ public:
     bool get_status();
     char get_data() const;
     char get_exception() const;
-    char get_result() const;
+    //char get_result() const;
 
     MySQL();
 };

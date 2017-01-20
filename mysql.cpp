@@ -70,8 +70,8 @@ void MySQL::connect_db() {
         stmt = con->createStatement();
         res = stmt->executeQuery("SELECT 'Hello World!' AS _message");
         while (res->next()) {
-            string result* = res->getString(1);
-            resultset = result;
+           // string result* = res->getString(1);
+            //resultset = result;
             cout << "\t... MySQL replies: ";
             /* Access column data by alias or column name */
             cout << res->getString("_message") << endl;
@@ -113,10 +113,10 @@ char MySQL::get_exception() const {
     
     return exception;
 }
-char MySQL::get_result() const {
+/*char MySQL::get_result() const {
     
     return *resultset;
-}
+} */
 void MySQL::_bind_methods() {
 
     ObjectTypeDB::bind_method("add",&MySQL::add);
@@ -128,7 +128,7 @@ void MySQL::_bind_methods() {
     ObjectTypeDB::bind_method("get_status",&MySQL::get_status);
     ObjectTypeDB::bind_method("get_data",&MySQL::get_data);
     ObjectTypeDB::bind_method("get_exception",&MySQL::get_exception);
-    ObjectTypeDB::bind_method("get_result",&MySQL::get_result);
+    //ObjectTypeDB::bind_method("get_result",&MySQL::get_result);
 }
 
 MySQL::MySQL() {
