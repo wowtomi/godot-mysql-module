@@ -31,11 +31,11 @@ protected:
 public:
     void add(int value);
     void reset();
-    void connect_db();
+    void connect_db(wchar_t hostname);
     //void close_connection(sql::Connection *con);
     int get_total() const;
 
-    bool get_status();
+    bool get_status() const;
     char get_data() const;
     char get_exception() const;
     //char get_result() const;

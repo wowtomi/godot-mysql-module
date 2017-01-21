@@ -29,21 +29,25 @@ void MySQL::reset() {
     count=0;
 }
 
-void MySQL::connect_db() {
+void MySQL::connect_db(wchar_t hostname) {
     
-    //driver = sql::mysql::get_mysql_driver_instance();
-    //con = driver->connect("tamas.schabi.org:3306", "root", "gtaIV");
-    status = true;
-    cout << "lol?";
     try {
         sql::Driver *driver;
         sql::Connection *con;
         sql::Statement *stmt;
         sql::ResultSet *res;
+		
+		//string hs = hostname;
+		//string us = username;
+		//string ps = password;
+
+		//sql::SQLString h = (sql::SQLString)hostname;
+		//sql::SQLString u = "root";
+		//sql::SQLString p = "gtaIV";
 
         /* Create a connection */
         driver = get_driver_instance();
-        con = driver->connect("localhost:3306", "root", "gtaIV");
+        con = driver->connect("localhost", "root", "gtaIV");
         /* Connect to the MySQL test database */
        
         con->setSchema("emails");
@@ -65,7 +69,7 @@ void MySQL::connect_db() {
         delete con;
 
     } catch (sql::SQLException &e) {
-        exception = e.getErrorCode();
+        //exception = e.getErrorCode();
         cout << "# ERR: SQLException in " << __FILE__;
         cout << "# ERR: " << e.what();
         cout << " (MySQL error code: " << e.getErrorCode();
@@ -81,7 +85,7 @@ int MySQL::get_total() const {
     return count;
 }
 
-bool MySQL::get_status() {
+bool MySQL::get_status() const{
 
     return status;
 }
