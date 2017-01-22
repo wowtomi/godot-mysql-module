@@ -29,7 +29,7 @@ void MySQL::reset() {
     count=0;
 }
 
-void MySQL::connect_db(wchar_t hostname) {
+void MySQL::connect_db(String hostname) {
     
     try {
         sql::Driver *driver;
@@ -40,10 +40,12 @@ void MySQL::connect_db(wchar_t hostname) {
 		//string hs = hostname;
 		//string us = username;
 		//string ps = password;
-
-		//sql::SQLString h = (sql::SQLString)hostname;
-		//sql::SQLString u = "root";
+		
+		//const char * h = hostname;
+		//const char * h = hostname.c_str();
+		//sql::SQLString h = hostname.c_str();
 		//sql::SQLString p = "gtaIV";
+		print_line("useless parameter: "+hostname);
 
         /* Create a connection */
         driver = get_driver_instance();
@@ -56,6 +58,8 @@ void MySQL::connect_db(wchar_t hostname) {
         res = stmt->executeQuery("SELECT 'Hello World!' AS _message");
         while (res->next()) {
            // string result* = res->getString(1);
+			print_line("MySQL reply: ");
+			//print_line(res->getString(1));
             //resultset = result;
             cout << "\t... MySQL replies: ";
             /* Access column data by alias or column name */
@@ -69,11 +73,15 @@ void MySQL::connect_db(wchar_t hostname) {
         delete con;
 
     } catch (sql::SQLException &e) {
-        //exception = e.getErrorCode();
-        cout << "# ERR: SQLException in " << __FILE__;
-        cout << "# ERR: " << e.what();
-        cout << " (MySQL error code: " << e.getErrorCode();
-        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+		print_line("# ERR: SQLException in: ");
+		print_line(__FILE__);
+		print_line("# ERR: ");
+		print_line(e.what());
+		print_line(" (MySQL error code: N/A");
+		//Variant e_code = to_string(e.getErrorCode());
+		//print_line(e_code);
+		print_line("SQLState: N/A");
+		//print_line(e.getSQLState());
     }
 }
 /*void MySQL::close_connection(sql::Connection *con) {
@@ -93,11 +101,6 @@ char MySQL::get_data() const {
     
     return data;
 }
-
-char MySQL::get_exception() const {
-    
-    return exception;
-}
 /*char MySQL::get_result() const {
     
     return *resultset;
@@ -107,13 +110,9 @@ void MySQL::_bind_methods() {
     ObjectTypeDB::bind_method("add",&MySQL::add);
     ObjectTypeDB::bind_method("reset",&MySQL::reset);
     ObjectTypeDB::bind_method("connect_db",&MySQL::connect_db);
-    //ObjectTypeDB::bind_method("fetch",&MySQL::fetch);
-    //ObjectTypeDB::bind_method("close_connection",&MySQL::close_connection);
     ObjectTypeDB::bind_method("get_total",&MySQL::get_total);
     ObjectTypeDB::bind_method("get_status",&MySQL::get_status);
     ObjectTypeDB::bind_method("get_data",&MySQL::get_data);
-    ObjectTypeDB::bind_method("get_exception",&MySQL::get_exception);
-    //ObjectTypeDB::bind_method("get_result",&MySQL::get_result);
 }
 
 MySQL::MySQL() {
@@ -121,6 +120,5 @@ MySQL::MySQL() {
 
     status=false;
     data='*';
-    exception='*';
 }
 

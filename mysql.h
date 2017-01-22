@@ -22,7 +22,7 @@ class MySQL : public Reference {
 
     int count;
     bool status;
-    char exception, data;
+    char data;
     char resultset;
 
 protected:
@@ -31,14 +31,12 @@ protected:
 public:
     void add(int value);
     void reset();
-    void connect_db(wchar_t hostname);
+    void connect_db(String hostname);
     //void close_connection(sql::Connection *con);
     int get_total() const;
 
     bool get_status() const;
     char get_data() const;
-    char get_exception() const;
-    //char get_result() const;
 
     MySQL();
 };
