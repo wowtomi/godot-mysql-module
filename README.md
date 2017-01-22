@@ -1,4 +1,6 @@
-# godot-mysql-module
+godot-mysql-module
+==================
+
 MySQL Connector Module for Godot Engine
 
 Requirements:
