@@ -21,10 +21,12 @@ class MySQL : public Reference {
     OBJ_TYPE(MySQL,Reference);
 
     int count;
-    bool status;
-    char data;
-    char resultset;
-    const char* database;
+
+    sql::SQLString host;
+    sql::SQLString user;
+    sql::SQLString pass;
+    sql::SQLString database;
+    sql::SQLString SQLquery;
 
 protected:
     static void _bind_methods();
@@ -32,7 +34,10 @@ protected:
 public:
     void add(int value);
     void reset();
-    void mysql_connect(String hostname, String username, String password);
+    void mysql_connect(String hostname, String username, String password, String database);
+    
+    void set_login(String shost, String suser, String spass, String sdatabase);
+    void query(String q);    
     int get_total() const;
 
     MySQL();
