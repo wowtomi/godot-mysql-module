@@ -24,6 +24,7 @@ class MySQL : public Reference {
     bool status;
     char data;
     char resultset;
+    const char* database;
 
 protected:
     static void _bind_methods();
@@ -31,12 +32,8 @@ protected:
 public:
     void add(int value);
     void reset();
-    void connect_db(String hostname);
-    //void close_connection(sql::Connection *con);
+    void mysql_connect(String hostname, String username, String password);
     int get_total() const;
-
-    bool get_status() const;
-    char get_data() const;
 
     MySQL();
 };

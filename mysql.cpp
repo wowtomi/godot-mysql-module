@@ -29,27 +29,21 @@ void MySQL::reset() {
     count=0;
 }
 
-void MySQL::connect_db(String hostname) {
+void MySQL::mysql_connect(String hostname, String username, String password) {
     
     try {
         sql::Driver *driver;
         sql::Connection *con;
         sql::Statement *stmt;
         sql::ResultSet *res;
-		
-		//string hs = hostname;
-		//string us = username;
-		//string ps = password;
-		
-		//const char * h = hostname;
-		//const char * h = hostname.c_str();
-		//sql::SQLString h = hostname.c_str();
-		//sql::SQLString p = "gtaIV";
-		print_line("useless parameter: "+hostname);
-
+        
+		sql::SQLString h = hostname.utf8().get_data();
+        sql::SQLString u = username.utf8().get_data();
+        sql::SQLString p = password.utf8().get_data();
+        
         /* Create a connection */
         driver = get_driver_instance();
-        con = driver->connect("localhost", "root", "gtaIV");
+        con = driver->connect(h, u, p);
         /* Connect to the MySQL test database */
        
         con->setSchema("emails");
@@ -57,10 +51,8 @@ void MySQL::connect_db(String hostname) {
         stmt = con->createStatement();
         res = stmt->executeQuery("SELECT 'Hello World!' AS _message");
         while (res->next()) {
-           // string result* = res->getString(1);
 			print_line("MySQL reply: ");
-			//print_line(res->getString(1));
-            //resultset = result;
+			//print_line(String(res->getString(1)));
             cout << "\t... MySQL replies: ";
             /* Access column data by alias or column name */
             cout << res->getString("_message") << endl;
@@ -73,46 +65,27 @@ void MySQL::connect_db(String hostname) {
         delete con;
 
     } catch (sql::SQLException &e) {
-		print_line("# ERR: SQLException in: ");
-		print_line(__FILE__);
-		print_line("# ERR: ");
-		print_line(e.what());
-		print_line(" (MySQL error code: N/A");
-		//Variant e_code = to_string(e.getErrorCode());
-		//print_line(e_code);
-		print_line("SQLState: N/A");
-		//print_line(e.getSQLState());
+        print_line("### EXCEPTION Caught");
+        Variant file = __FILE__;
+        //Varient func = __FUNCTION__;
+        Variant line = __LINE__;
+		print_line("# ERR: SQLException in: "+String(file)+" on line "+String(line));
+		print_line("# ERR: "+String(e.what()));
+        Variant errCode = e.getErrorCode();
+		print_line(" (MySQL error code: "+String(errCode)+")");
+		print_line("SQLState: N/A"); // e.getSQLState()
     }
 }
-/*void MySQL::close_connection(sql::Connection *con) {
-    
-    delete con;
-} */
 int MySQL::get_total() const {
 
     return count;
 }
-
-bool MySQL::get_status() const{
-
-    return status;
-}
-char MySQL::get_data() const {
-    
-    return data;
-}
-/*char MySQL::get_result() const {
-    
-    return *resultset;
-} */
 void MySQL::_bind_methods() {
 
     ObjectTypeDB::bind_method("add",&MySQL::add);
     ObjectTypeDB::bind_method("reset",&MySQL::reset);
-    ObjectTypeDB::bind_method("connect_db",&MySQL::connect_db);
+    ObjectTypeDB::bind_method("mysql_connect",&MySQL::mysql_connect);
     ObjectTypeDB::bind_method("get_total",&MySQL::get_total);
-    ObjectTypeDB::bind_method("get_status",&MySQL::get_status);
-    ObjectTypeDB::bind_method("get_data",&MySQL::get_data);
 }
 
 MySQL::MySQL() {
