@@ -8,5 +8,3 @@ Requirements:
 
 Installation:
 Simply place or clone the repository into /path/to/godot/modules folder and rename it to "mysql" and build the engine to your specified OS.
-
-P.S Will probably not compile faggot.
