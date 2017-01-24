@@ -20,25 +20,22 @@
 class MySQL : public Reference {
     OBJ_TYPE(MySQL,Reference);
 
-    int count;
+protected:
+    static void _bind_methods();
+    String sql2String(sql::SQLString s);
+    bool has_only_digits(String s);
 
     sql::SQLString host;
     sql::SQLString user;
     sql::SQLString pass;
     sql::SQLString database;
-    sql::SQLString SQLquery;
-
-protected:
-    static void _bind_methods();
 
 public:
-    void add(int value);
-    void reset();
-    void mysql_connect(String hostname, String username, String password, String database);
-    
-    void set_login(String shost, String suser, String spass, String sdatabase);
-    void query(String q);    
-    int get_total() const;
+
+    void credentials(String shost, String suser, String spass);
+    void select_database(String db);
+    void execute(String s);
+    Variant query(String q, String columnId="1");
 
     MySQL();
 };
