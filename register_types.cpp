@@ -11,12 +11,12 @@
 #include "cppconn/resultset.h"
 #include "cppconn/statement.h"
 
-void register_godot-mysql-module_types() {
+void register_mysql_types() {
 
         ObjectTypeDB::register_type<MySQL>();
 }
 
-void unregister_godot-mysql-module_types() {
+void unregister_mysql_types() {
    //nothing to do here
 }
 
