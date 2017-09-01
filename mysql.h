@@ -18,7 +18,7 @@
 #include <cppconn/statement.h>
 
 class MySQL : public Reference {
-    OBJ_TYPE(MySQL,Reference);
+    GDCLASS(MySQL,Reference);
 
 protected:
     static void _bind_methods();

@@ -137,10 +137,10 @@ bool MySQL::has_only_digits(String s){
 }
 void MySQL::_bind_methods() {
 
-    ObjectTypeDB::bind_method(_MD("credentials","hostname","username","password"),&MySQL::credentials);
-    ObjectTypeDB::bind_method(_MD("query","sql_query","colum_id='1'"),&MySQL::query);
-    ObjectTypeDB::bind_method(_MD("execute","sql"),&MySQL::execute);
-    ObjectTypeDB::bind_method(_MD("select_database","database"),&MySQL::select_database);
+    	ClassDB::bind_method(D_METHOD("credentials","hostname","username","password"),&MySQL::credentials);
+    	ClassDB::bind_method(D_METHOD("query","sql_query","colum_id='1'"),&MySQL::query);
+    	ClassDB::bind_method(D_METHOD("execute","sql"),&MySQL::execute);
+    	ClassDB::bind_method(D_METHOD("select_database","database"),&MySQL::select_database);
 }
 
 MySQL::MySQL() {

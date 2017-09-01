@@ -1,7 +1,7 @@
 /* register_types.cpp */
 
 #include "register_types.h"
-#include "object_type_db.h"
+#include "class_db.h"
 #include "mysql.h"
 
 #include "mysql_connection.h"
@@ -13,7 +13,7 @@
 
 void register_mysql_types() {
 
-        ObjectTypeDB::register_type<MySQL>();
+        ClassDB::register_class<MySQL>();
 }
 
 void unregister_mysql_types() {
