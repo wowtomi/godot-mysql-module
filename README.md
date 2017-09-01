@@ -7,7 +7,7 @@ MySQL Connector Module for Godot Engine
   
 **Installation:**
   
-Use the specific branch for your Godot Version, master branch should be for Godot's master branch!
+Use the specific branch for your Godot Version, master branch should be for Godot's master branch!  
 Simply place or clone the repository into **/path/to/godot/modules** folder  
 and rename it to **"mysql"** and build the engine from source.  
   
