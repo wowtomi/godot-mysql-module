@@ -42,22 +42,23 @@ void MySQL::select_database(String db)
 Variant MySQL::query(String q, String columnId)
 {
     sql::SQLString SQLquery = q.utf8().get_data();
-    
-    Variant r = Variant();
-    
+
+    String r= "";
+    PoolStringArray arr = {};
+
     try {
         driver = get_driver_instance();
         con = driver->connect(host, user, pass);
-        
+
         if(database != "")
         {
             con->setSchema(database);
         }
-        
+
         stmt = con->createStatement();
         res = stmt->executeQuery(SQLquery);
-       // 
-        while (res->next()) 
+
+        while (res->next())
         {
         	bool is_num = has_only_digits(columnId);
         	if (is_num)
@@ -65,19 +66,21 @@ Variant MySQL::query(String q, String columnId)
         		/* Access column data by numeric offset, 1 is the first column */
         		int columnIndex = Variant(columnId);
         		r=sql2String(res->getString(columnIndex));
+            arr.append(r);
         	}
         	else
         	{
         		/* Access column data by alias or column name */
         		sql::SQLString columnName = columnId.utf8().get_data();
            		r=sql2String(res->getString(columnName));
+              arr.append(r);
            	}
 
         }
         delete res;
         delete stmt;
         delete con;
-        
+
         }
         catch (sql::SQLException &e) {
             print_line("# EXCEPTION Caught ˇ");
@@ -91,21 +94,28 @@ Variant MySQL::query(String q, String columnId)
 		    print_line("SQLState: "+sql2String(e.getSQLState()));
     }
 
-    return r;
+    if (arr.size() == 1)
+    {
+      return arr[0];
+    }
+
+
+    return arr;
 }
+
 void MySQL::execute(String s)
 {
     sql::SQLString sql = s.utf8().get_data();
-    
+
     try {
         driver = get_driver_instance();
         con = driver->connect(host, user, pass);
-        
+
         if(database != "")
         {
             con->setSchema(database);
         }
-        
+
         stmt = con->createStatement();
         stmt->execute(sql);
         print_line("executed: "+s);
@@ -145,4 +155,3 @@ void MySQL::_bind_methods() {
 
 MySQL::MySQL() {
 }
-
