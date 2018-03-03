@@ -19,10 +19,10 @@ mysql.cpp
 
 using namespace std;
 
-sql::Driver *driver;
-sql::Connection *con;
-sql::Statement *stmt;
-sql::ResultSet *res;
+//sql::Driver *driver;
+//sql::Connection *con;
+//sql::Statement *stmt;
+//sql::ResultSet *res;
 
 sql::SQLString host;
 sql::SQLString user;
@@ -39,7 +39,8 @@ void MySQL::select_database(String db)
 {
 	database=db.utf8().get_data();
 }
-Variant MySQL::query(String q, String columnId)
+
+Variant MySQL::query(String q, Variant column)
 {
     sql::SQLString SQLquery = q.utf8().get_data();
 
@@ -47,39 +48,69 @@ Variant MySQL::query(String q, String columnId)
     PoolStringArray arr = {};
 
     try {
-        driver = get_driver_instance();
-        con = driver->connect(host, user, pass);
+        sql::Driver *d = get_driver_instance();
+        sql::Connection *conn = d->connect(host, user, pass);
 
         if(database != "")
         {
-            con->setSchema(database);
+            conn->setSchema(database);
         }
 
-        stmt = con->createStatement();
-        res = stmt->executeQuery(SQLquery);
+        sql::Statement *stmt = conn->createStatement();
+        sql::ResultSet *res = stmt->executeQuery(SQLquery);
 
         while (res->next())
-        {
-        	bool is_num = has_only_digits(columnId);
+          {
+            int type = column.get_type();
+
+            if (type == Variant::INT) // TYPE INT
+            {
+                //print_line("# column type INT");
+                int columnIndex = Variant(column);
+                r=sql2String(res->getString(columnIndex));
+                arr.append(r);
+            }
+            if (type == Variant::STRING) // TYPE STRING
+            {
+                print_line("## this isn't working, try array or int");
+                sql::SQLString columnName = String(column).utf8().get_data();
+                r=sql2String(res->getString(columnName));
+                arr.append(r);
+            }
+            if (type == Variant::ARRAY) // TYPE ARRAY
+            {
+              //print_line("# column type ARRAY");
+              Array array = Array(column);
+                for (int x=0;x<array.size();x++)
+                {
+                  sql::SQLString columnName = String(array[x]).utf8().get_data();
+                  r=sql2String(res->getString(columnName));
+                  arr.append(r);
+                }
+            }
+
+        	/*bool is_num = has_only_digits(column);
         	if (is_num)
         	{
         		/* Access column data by numeric offset, 1 is the first column */
-        		int columnIndex = Variant(columnId);
+        	/* int columnIndex = Variant(column);
         		r=sql2String(res->getString(columnIndex));
             arr.append(r);
         	}
         	else
         	{
-        		/* Access column data by alias or column name */
-        		sql::SQLString columnName = columnId.utf8().get_data();
+            /* Access column data by alias or column name */
+            /*
+        		sql::SQLString columnName = column.utf8().get_data();
            		r=sql2String(res->getString(columnName));
               arr.append(r);
            	}
+            */
 
         }
         delete res;
         delete stmt;
-        delete con;
+        delete conn;
 
         }
         catch (sql::SQLException &e) {
@@ -108,18 +139,18 @@ void MySQL::execute(String s)
     sql::SQLString sql = s.utf8().get_data();
 
     try {
-        driver = get_driver_instance();
-        con = driver->connect(host, user, pass);
+        sql::Driver *driver = get_driver_instance();
+        sql::Connection *con = driver->connect(host, user, pass);
 
         if(database != "")
         {
             con->setSchema(database);
         }
 
-        stmt = con->createStatement();
+        sql::Statement *stmt = con->createStatement();
+        //stmt->execute("USE " +database)
         stmt->execute(sql);
         print_line("executed: "+s);
-        delete res;
         delete stmt;
         delete con;
         }

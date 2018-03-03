@@ -35,7 +35,7 @@ public:
     void credentials(String shost, String suser, String spass);
     void select_database(String db);
     void execute(String s);
-    Variant query(String q, String columnId="1");
+    Variant query(String q, Variant column="1");
 
     MySQL();
 };
