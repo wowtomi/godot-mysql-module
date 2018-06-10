@@ -24,6 +24,7 @@ protected:
     static void _bind_methods();
     String sql2String(sql::SQLString s);
     bool has_only_digits(String s);
+    bool debug_info;
 
     sql::SQLString host;
     sql::SQLString user;
@@ -32,7 +33,7 @@ protected:
 
 public:
 
-    void credentials(String shost, String suser, String spass);
+    void credentials(String shost, String suser, String spass, bool debug=false);
     void select_database(String db);
     void execute(String s);
     Variant query(String q, Variant column="1");

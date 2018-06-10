@@ -23,17 +23,19 @@ using namespace std;
 //sql::Connection *con;
 //sql::Statement *stmt;
 //sql::ResultSet *res;
+bool debug_info = false;
 
 sql::SQLString host;
 sql::SQLString user;
 sql::SQLString pass;
 sql::SQLString database;
 
-void MySQL::credentials(String shost, String suser, String spass)
+void MySQL::credentials(String shost, String suser, String spass, bool debug)
 {
     host=shost.utf8().get_data();
     user=suser.utf8().get_data();
     pass=spass.utf8().get_data();
+    debug_info = debug;
 }
 void MySQL::select_database(String db)
 {
@@ -72,7 +74,10 @@ Variant MySQL::query(String q, Variant column)
             }
             if (type == Variant::STRING) // TYPE STRING
             {
-                print_line("## this isn't working, try array or int");
+                if (debug_info)
+                {
+                  print_line("## this isn't working, try array or int");
+                }
                 sql::SQLString columnName = String(column).utf8().get_data();
                 r=sql2String(res->getString(columnName));
                 arr.append(r);
@@ -114,15 +119,19 @@ Variant MySQL::query(String q, Variant column)
 
         }
         catch (sql::SQLException &e) {
+
+          if (debug_info)
+          {
             print_line("# EXCEPTION Caught ˇ");
             Variant file = __FILE__;
             Variant line = __LINE__;
             Variant func = __FUNCTION__;
-		    print_line("# ERR: SQLException in: "+String(file)+" in function: "+String(func)+"() on line "+String(line));
-		    print_line("# ERR: "+String(e.what()));
+		        print_line("# ERR: SQLException in: "+String(file)+" in function: "+String(func)+"() on line "+String(line));
+		        print_line("# ERR: "+String(e.what()));
             Variant errCode = e.getErrorCode();
-		    print_line(" (MySQL error code: "+String(errCode)+")");
-		    print_line("SQLState: "+sql2String(e.getSQLState()));
+		        print_line(" (MySQL error code: "+String(errCode)+")");
+		        print_line("SQLState: "+sql2String(e.getSQLState()));
+          }
     }
 
     if (arr.size() == 1)
@@ -150,20 +159,28 @@ void MySQL::execute(String s)
         sql::Statement *stmt = con->createStatement();
         //stmt->execute("USE " +database)
         stmt->execute(sql);
-        print_line("executed: "+s);
+        if (debug_info)
+        {
+          print_line("executed: "+s);
+        }
         delete stmt;
         delete con;
         }
         catch (sql::SQLException &e) {
+
+          if (debug_info)
+          {
             print_line("# EXCEPTION Caught ˇ");
             Variant file = __FILE__;
             Variant line = __LINE__;
             Variant func = __FUNCTION__;
-		    print_line("# ERR: SQLException in: "+String(file)+" in function: "+String(func)+"() on line "+String(line));
-		    print_line("# ERR: "+String(e.what()));
+		        print_line("# ERR: SQLException in: "+String(file)+" in function: "+String(func)+"() on line "+String(line));
+		        print_line("# ERR: "+String(e.what()));
             Variant errCode = e.getErrorCode();
-		    print_line(" (MySQL error code: "+String(errCode)+")");
-		    print_line("SQLState: "+sql2String(e.getSQLState()));
+		        print_line(" (MySQL error code: "+String(errCode)+")");
+		        print_line("SQLState: "+sql2String(e.getSQLState()));
+          }
+
     }
 }
 String MySQL::sql2String(sql::SQLString s)
@@ -178,7 +195,7 @@ bool MySQL::has_only_digits(String s){
 }
 void MySQL::_bind_methods() {
 
-    	ClassDB::bind_method(D_METHOD("credentials","hostname","username","password"),&MySQL::credentials);
+    	ClassDB::bind_method(D_METHOD("credentials","hostname","username","password","debug='false'"),&MySQL::credentials);
     	ClassDB::bind_method(D_METHOD("query","sql_query","colum_id='1'"),&MySQL::query);
     	ClassDB::bind_method(D_METHOD("execute","sql"),&MySQL::execute);
     	ClassDB::bind_method(D_METHOD("select_database","database"),&MySQL::select_database);
